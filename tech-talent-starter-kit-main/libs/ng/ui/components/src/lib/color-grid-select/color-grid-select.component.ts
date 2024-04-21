@@ -49,6 +49,7 @@ import { Subject, takeUntil } from 'rxjs';
  *
  * @link https://blog.angular-university.io/angular-custom-form-controls/
  */
+
 @Component({
   selector: 'brew-color-grid-select',
   standalone: true,
@@ -69,8 +70,7 @@ import { Subject, takeUntil } from 'rxjs';
   ],
 })
 export class ColorGridSelectComponent
-  implements ControlValueAccessor, ColorGridSelect, AfterViewInit, OnDestroy
-{
+  implements ControlValueAccessor, ColorGridSelect, AfterViewInit, OnDestroy {
   /** Emits when the list has been destroyed. */
   private readonly _destroyed = new Subject<void>();
 
@@ -149,6 +149,20 @@ export class ColorGridSelectComponent
     // The calculation will be based on the available width of the element width and itemSize
     //   this._itemsPerRow = ...
     //
+    console.log(this._el.nativeElement.offsetWidth);
+    const pickerWidth = this._el.nativeElement.offsetWidth;
+    let itemWidth: any;
+    console.log(this.itemSize);
+
+    // if (this.itemSize == "small") {
+    //   itemWidth = 32;
+    // } else if (this.itemSize == "medium") {
+    //   itemWidth = 64;
+    // } else if (this.itemSize == "large") {
+    //   itemWidth = 80;
+    // }
+    // this._itemsPerRow = Math.floor(pickerWidth / itemWidth);
+
 
     return chunk(this._items(), this._itemsPerRow);
   });
@@ -244,17 +258,50 @@ export class ColorGridSelectComponent
    */
   @HostListener('keydown', ['$event'])
   private _onKeydown(event: KeyboardEvent) {
+    console.log(event.keyCode);
+
+    const activeIndex = this._keyManager.activeItemIndex ?? -1;
+    console.log("activeIndex", activeIndex);
+    let newIndex: any = null;
+    console.log(this.items);
+    
+
     switch (event.keyCode) {
       case UP_ARROW:
-      case DOWN_ARROW:
-      case LEFT_ARROW:
-      case RIGHT_ARROW: {
-        // add logic
-        // ....
-
-        this._keyManager.onKeydown(event); // @fixme remove the following after the grid logic is implemented
+        console.log("UP_ARROW pressed");
+        newIndex = activeIndex - this._itemsPerRow;
+        if (newIndex >= 0) {
+          this._keyManager.setActiveItem(newIndex);
+        }
+        // this._keyManager.setActiveItem(activeIndex - this._itemsPerRow);
+        event.preventDefault();
         break;
-      }
+      case DOWN_ARROW:
+        console.log("DOWN_ARROW pressed");
+        newIndex = activeIndex + this._itemsPerRow;
+        if (newIndex < this.items.length) {
+          this._keyManager.setActiveItem(newIndex);
+        }
+        // this._keyManager.setActiveItem(activeIndex + this._itemsPerRow);
+        event.preventDefault();
+        break;
+      case LEFT_ARROW:
+        console.log("LEFT_ARROW pressed");
+        this._keyManager.setPreviousItemActive()
+        event.preventDefault();
+        break;
+      case RIGHT_ARROW:
+        console.log("RIGHT_ARROW pressed");
+        this._keyManager.setNextItemActive();
+        event.preventDefault();
+        break;
+      // case RIGHT_ARROW: {
+      //   // add logic
+      //   // ....
+
+      // this._keyManager.onKeydown(event); // @fixme remove the following after the grid logic is implemented
+      //   break;
+      // }
     }
   }
 
