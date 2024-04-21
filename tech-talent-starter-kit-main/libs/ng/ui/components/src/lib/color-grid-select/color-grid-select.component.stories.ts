@@ -45,3 +45,28 @@ type Story = StoryObj<ColorGridSelectComponent>;
 export const Primary: Story = {
   args: {},
 };
+
+export const Default = () => ({
+  component: ColorGridSelectComponent,
+  props: {
+    items: ['#ff0000', '#00ff00', '#0000ff'],
+    value: '#ff0000',
+  }
+});
+
+export const Selected = () => ({
+  component: ColorGridSelectComponent,
+  props: {
+    items: ['#ff0000', '#00ff00', '#0000ff'],
+    value: '#00ff00',
+  }
+});
+
+export const Disabled = () => ({
+  component: ColorGridSelectComponent,
+  props: {
+    items: ['#ff0000', '#00ff00', '#0000ff'],
+    value: '#ff0000',
+    disabled: true,
+  }
+});
