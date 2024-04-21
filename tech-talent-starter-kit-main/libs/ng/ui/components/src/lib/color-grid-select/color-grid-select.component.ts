@@ -264,7 +264,6 @@ export class ColorGridSelectComponent
     console.log("activeIndex", activeIndex);
     let newIndex: any = null;
     console.log(this.items);
-    
 
     switch (event.keyCode) {
       case UP_ARROW:
@@ -273,26 +272,39 @@ export class ColorGridSelectComponent
         if (newIndex >= 0) {
           this._keyManager.setActiveItem(newIndex);
         }
-        // this._keyManager.setActiveItem(activeIndex - this._itemsPerRow);
         event.preventDefault();
         break;
       case DOWN_ARROW:
         console.log("DOWN_ARROW pressed");
         newIndex = activeIndex + this._itemsPerRow;
+        if (newIndex >= this.items.length) {
+          newIndex = activeIndex % this._itemsPerRow;
+        }
         if (newIndex < this.items.length) {
           this._keyManager.setActiveItem(newIndex);
         }
-        // this._keyManager.setActiveItem(activeIndex + this._itemsPerRow);
         event.preventDefault();
         break;
       case LEFT_ARROW:
         console.log("LEFT_ARROW pressed");
-        this._keyManager.setPreviousItemActive()
+        newIndex = activeIndex - 1;
+        if (newIndex < 0) {
+          newIndex = (Math.floor(activeIndex / this._itemsPerRow) - 1) * this._itemsPerRow + (this._itemsPerRow - 1);
+        }
+        if (newIndex >= 0) {
+          this._keyManager.setActiveItem(newIndex);
+        }
         event.preventDefault();
         break;
       case RIGHT_ARROW:
         console.log("RIGHT_ARROW pressed");
-        this._keyManager.setNextItemActive();
+        newIndex = activeIndex + 1;
+        if (newIndex >= this.items.length) {
+          newIndex = Math.floor(activeIndex / this._itemsPerRow) * this._itemsPerRow;
+        }
+        if (newIndex < this.items.length) {
+          this._keyManager.setActiveItem(newIndex);
+        }
         event.preventDefault();
         break;
       // case RIGHT_ARROW: {
